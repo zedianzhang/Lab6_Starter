@@ -5,13 +5,17 @@
 const recipes = [
   'https://introweb.tech/assets/json/ghostCookies.json',
   'https://introweb.tech/assets/json/birthdayCake.json',
-  'https://introweb.tech/assets/json/chocolateChip.json'
+  'https://introweb.tech/assets/json/chocolateChip.json',
+  'assets/scripts/fire_chicken.json',
+  'assets/scripts/curry.json',
+  'assets/scripts/bbq.json'
 ];
 
 // Once all of the recipes that were specified above have been fetched, their
 // data will be added to this object below. You may use whatever you like for the
 // keys as long as it's unique, one suggestion might but the URL itself
 const recipeData = {}
+var more_on=false
 
 window.addEventListener('DOMContentLoaded', init);
 
@@ -25,7 +29,7 @@ async function init() {
     return;
   };
   // Add the first three recipe cards to the page
-  createRecipeCards();
+  createRecipeCards(0,3);
   // Make the "Show more" button functional
   bindShowMore();
 }
@@ -43,10 +47,25 @@ async function fetchRecipes() {
     // in the recipes folder and fetch them from there. You'll need to add their paths to the recipes array.
 
     // Part 1 Expose - TODO
+    var count=0;
+    recipes.forEach(element => {
+      fetch(element)
+        .then(response => response.json())
+        .then(data => {
+          recipeData[element]=data
+        })
+        .catch((reason) =>{
+          console.log(reason)
+          reject(false)
+        });
+        setTimeout( function() {
+          resolve(true)  // Yay! Everything went well!
+        }, 250)
+    });
   });
 }
 
-function createRecipeCards() {
+function createRecipeCards(start,lens) {
   // This function is called for you up above.
   // From within this function you can access the recipe data from the JSON 
   // files with the recipeData Object above. Make sure you only display the 
@@ -54,6 +73,13 @@ function createRecipeCards() {
   // show any others you've added when the user clicks on the "Show more" button.
 
   // Part 1 Expose - TODO
+  for (let index = start; index < lens; index++) {
+    const element = recipes[index];
+    let card =document.querySelector('main').appendChild(document.createElement('recipe-card'))
+    card.data=recipeData[element]
+  }
+
+  
 }
 
 function bindShowMore() {
@@ -65,4 +91,20 @@ function bindShowMore() {
   // in the recipeData object where you stored them/
 
   // Part 2 Explore - TODO
+  const button = document.querySelector("button")
+  console.log(button)
+  button.addEventListener('click',(Event)=>{
+    if(more_on==false){
+      createRecipeCards(3,6)
+      more_on=true
+    }else{
+      const  main=document.querySelector('main')
+      console.log()
+      main.lastChild.remove()
+      main.lastChild.remove()
+      main.lastChild.remove()
+      more_on=false
+    }
+
+  })
 }

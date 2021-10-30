@@ -1,7 +1,8 @@
 class RecipeCard extends HTMLElement {
   constructor() {
     // Part 1 Expose - TODO
-
+    super();
+    this.shadow = this.attachShadow({mode: 'open'});
     // You'll want to attach the shadow DOM here
   }
 
@@ -87,7 +88,6 @@ class RecipeCard extends HTMLElement {
 
     // Here's the root element that you'll want to attach all of your other elements to
     const card = document.createElement('article');
-
     // Some functions that will be helpful here:
     //    document.createElement()
     //    document.querySelector()
@@ -100,6 +100,54 @@ class RecipeCard extends HTMLElement {
     // created in the constructor()
 
     // Part 1 Expose - TODO
+    //img
+    
+    const img = card.appendChild(document.createElement('img'));
+    img.src=searchForKey(data,'thumbnailUrl')
+    if (searchForKey(data,'thumbnailUrl')==undefined) {
+      img.src=searchForKey(data,'image')
+    }
+    img.alt=searchForKey(data,'headline')
+    //p title
+    const title=card.appendChild(document.createElement('p'))
+    title.className='title'
+    const content=title.appendChild(document.createElement('a'))
+    content.href=getUrl(data)
+    content.textContent=searchForKey(data,'headline')
+    if (searchForKey(data,'headline')==undefined) {
+      content.textContent=searchForKey(data,'name')
+    }
+    //p organtzation
+    const organization=card.appendChild(document.createElement('p'))
+    organization.setAttribute('class','organization')
+    organization.textContent=getOrganization(data)
+
+    //div rating
+    const rating= card.appendChild(document.createElement('div'))
+    rating.className='rating'
+    //rating
+    if (searchForKey(data,'aggregateRating')!=undefined){
+      const value=rating.appendChild(document.createElement('span'))
+      value.textContent=searchForKey(data,'ratingValue')
+      const img = rating.appendChild(document.createElement('img'));
+      img.src="/assets/images/icons/"+Math.round(searchForKey(data,'ratingValue'))+"-star.svg"
+      img.alt=Math.round(searchForKey(data,'ratingValue'))+" stars"
+      const count=rating.appendChild(document.createElement('span'))
+      count.textContent="("+searchForKey(data,'ratingCount')+")"
+    }else{
+      //no rating 
+      const sp=rating.appendChild(document.createElement('span'))
+      sp.textContent="No Reviews"
+    }
+    //time
+    const time=card.appendChild(document.createElement('time'))
+    time.textContent=convertTime(searchForKey(data,'totalTime'))
+    //ingredients
+    const ingredient=card.appendChild(document.createElement('p'))
+    ingredient.className="ingredients"
+    ingredient.textContent=createIngredientList(searchForKey(data,"recipeIngredient"))
+    this.shadow.appendChild(styleElem)
+    this.shadow.appendChild(card)
   }
 }
 
