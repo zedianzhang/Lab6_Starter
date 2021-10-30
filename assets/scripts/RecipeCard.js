@@ -130,7 +130,7 @@ class RecipeCard extends HTMLElement {
       const value=rating.appendChild(document.createElement('span'))
       value.textContent=searchForKey(data,'ratingValue')
       const img = rating.appendChild(document.createElement('img'));
-      img.src="/assets/images/icons/"+Math.round(searchForKey(data,'ratingValue'))+"-star.svg"
+      img.src="assets/images/icons/"+Math.round(searchForKey(data,'ratingValue'))+"-star.svg"
       img.alt=Math.round(searchForKey(data,'ratingValue'))+" stars"
       const count=rating.appendChild(document.createElement('span'))
       count.textContent="("+searchForKey(data,'ratingCount')+")"
